@@ -516,6 +516,7 @@ class GradedForm(forms.Form):
 
     def grade_field(self, i, configuration):
         t = configuration["type"]
+        options = configuration.get("options", [])
 
         if t == "table-radio" or t == "table-checkbox":
             all_ok = True
@@ -607,7 +608,14 @@ class GradedForm(forms.Form):
                     methods_used = method
                 r = self.compare_values(methods_used, value, comparison)
                 add = not r if fb.get('not', False) else r
-            if add:
+
+            # Add the related choice to each checkbox hint
+            if add and t == "checkbox":
+                option_label = next((d['label'] for d in options if d['value'] == comparison), None)
+                hints.append({'option_label': option_label, 'hint_text': new_hint})
+
+            # For other types just hint-text:
+            elif add and not t == "checkbox":
                 for j in range(len(hints)):
                     if new_hint.startswith(hints[j]):
                         hints[j] = new_hint
@@ -616,7 +624,7 @@ class GradedForm(forms.Form):
                     elif hints[j].startswith(new_hint):
                         add = False
                         break
-            if add:
+
                 hints.append(new_hint)
 
         if name in self.fields:
@@ -687,7 +695,7 @@ class GradedForm(forms.Form):
 
         # Add note of multiple correct answers.
         if correct_count > 1 and len(value) == 1:
-            hints.append(_("Multiple choices are selectable."))
+            hints.append({"option_label": None, "hint-text": "Multiple choices are selectable."})
 
         return correct, hints, 'array'
 
