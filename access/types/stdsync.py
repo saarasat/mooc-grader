@@ -124,7 +124,7 @@ def createForm(request, course, exercise, post_url):
 
     # Grade valid form posts.
     if form.is_valid():
-        (points, error_groups, error_fields) = form.grade()
+        (points, error_groups, error_fields, correct_fields) = form.grade()
         points = pointsInRange(points, exercise["max_points"])
 
         # Allow passing to asynchronous grading.
@@ -137,7 +137,8 @@ def createForm(request, course, exercise, post_url):
             points = exercise["max_points"]
 
         result = { "form": form, "accepted": True, "points": points,
-            "error_groups": error_groups, "error_fields": error_fields }
+            "error_groups": error_groups, "error_fields": error_fields,
+            "correct_fields": correct_fields }
 
     return cache_headers(
         render_configured_template(
@@ -155,7 +156,8 @@ def createFormModel(request, course, exercise, parameter):
     form.bind_initial()
     points,error_groups,error_fields = form.grade()
     result = { "form": form, "accepted": True, "points": points,
-        "error_groups": error_groups, "error_fields": error_fields }
+        "error_groups": error_groups, "error_fields": error_fields,
+        "correct_fields": correct_fields }
     return render_template(request, course, exercise, None,
         'access/graded_form.html', result)
 

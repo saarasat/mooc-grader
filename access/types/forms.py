@@ -422,6 +422,7 @@ class GradedForm(forms.Form):
         points = 0
         error_fields = []
         error_groups = []
+        correct_fields = []
         g = 0
         i = 0
         for group in self.exercise["fieldgroups"]:
@@ -429,6 +430,8 @@ class GradedForm(forms.Form):
                 prev = i
                 i, ok, p = self.grade_field(i, field)
                 points += p
+                if ok:
+                    correct_fields.append(self.field_name(prev, field))
                 if not ok:
                     error_fields.append(self.field_name(prev, field))
                     gname = self.group_name(g)
@@ -436,7 +439,7 @@ class GradedForm(forms.Form):
                         error_groups.append(gname)
             g += 1
 
-        return (points, error_groups, error_fields)
+        return (points, error_groups, error_fields, correct_fields)
 
     def compare_values(self, method, val, cmp):
         # Note: when adding new compare methods or modifiers, remember to update
