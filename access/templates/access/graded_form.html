@@ -132,17 +132,43 @@
 
 			{% endif %}
 
-		{% if field.field.type != "checkbox" and not field.field.row_label or field.field.close_table %}
-			{% if field.field.hints %}
+			{% if result.accepted and not field.field.row_label or field.field.close_table %}
 				<div class="question-feedback">
-					{% for hint in field.field.hints %}
-					<p class="help-block">{{ hint|safe }}</p>
-					{% endfor %}
+					{% if field.field.type != "checkbox" %}
+						{% if field.field.hints and field.field.grade_points == field.field.max_points %}
+							{% for hint in field.field.hints %}
+							<div class="help-block">
+								<i class="glyphicon glyphicon-ok"></i>
+								<span class="correct">{{ hint|safe }}</span>
+							</div>
+							{% endfor %}
+						{% elif field.field.hints and field.field.grade_points != field.field.max_points %}
+							{% for hint in field.field.hints %}
+								<div class="help-block">
+									<i class="glyphicon glyphicon-remove"></i>
+									<span>{{ hint|safe }}</span>
+								</div>
+							{% endfor %}
+						{% elif field.field.grade_points == field.field.max_points and not field.field.hints %}
+							<div class="help-block">
+								<i class="glyphicon glyphicon-ok"></i>
+								<span class="correct">{% trans "Correct!" %}</span>
+							</div>
+						{% elif field.field.grade_points != field.field.max_points and not field.field.hints %}
+							<div class="help-block">
+								<i class="glyphicon glyphicon-remove"></i>
+								<span>{% trans "Not correct" %}</span>
+							</div>
+						{% endif %}
+					{% elif field.field.type == "checkbox" and field.field.grade_points == field.field.max_points %}
+						<div class="help-block">
+							<i class="glyphicon glyphicon-ok"></i>
+							<span class="correct">{% trans "Correct!" %}</span>
+						</div>
+					{% endif %}
 				</div>
 			{% endif %}
 		</div>
-		{% endif %}
-
 		{% endif %}
 
 	{% if field.field.close_set %}
