@@ -13,3 +13,13 @@ def ajax_url(context):
         args=[context['course']['key'], context['exercise']['key']]
     ))
     return ""
+
+@register.filter
+def find_hints(list_of_hints, value):
+    hints = []
+    if list_of_hints:
+        for hint in list_of_hints:
+            if hint.get("option_value", "") == value:
+                hints.append(hint.get("text", ""))
+            
+    return hints

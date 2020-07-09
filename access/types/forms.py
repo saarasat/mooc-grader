@@ -614,7 +614,7 @@ class GradedForm(forms.Form):
             
             if add and t == "checkbox":
                 option_value = next((d['value'] for d in options if d['value'] == comparison), None)
-                hints.append({ option_value: new_hint })
+                hints.append({ "option_value": option_value, "text": new_hint })
           
             if add and not t == "checkbox":
                 hints.append(new_hint)
@@ -684,14 +684,6 @@ class GradedForm(forms.Form):
                 correct = 1
             else:
                 correct = (non_neutral_count / 2.0 - wrong_answers) / (non_neutral_count / 2.0)
-
-        # Add note of multiple correct answers.
-
-        if correct_count > 1 and len(value) == 1:
-            if configuration.get("feedback"):
-                hints.append({"Multiple": "Multiple choices are selectable"})
-            else:
-                hints.append(_("Multiple choices are selectable."))
 
         return correct, hints, 'array'
 

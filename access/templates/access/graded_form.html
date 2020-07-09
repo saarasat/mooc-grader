@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load access %}
 <form method="post" action="{{ post_url }}"{% if result.form.multipart %} enctype="multipart/form-data"{% endif %} class="aplus-quiz1">
 	{% for field in result.form %}
 	{% if field.field.open_set %}
@@ -13,15 +14,15 @@
 		{% else %}
 
 		{% if not field.field.row_label or field.field.open_table %}
-		<div class="{{ field.field.html_class }} {% if field.errors %} has-error{% elif not field.field.group_errors and field.field.name in result.error_fields %} has-error{% endif %}">
+		<div class="{{ field.field.html_class }}{% if field.errors %} has-error{% endif %}">
 
 			{% if field.field.required %}<span class="required">*</span>{% endif %}
 
 			{% if field.label %}
 			{% if field.field.choice_list %}
-			<label>{{ field.label }}</label>
+			<label class="control-label">{{ field.label }}</label>
 			{% else %}
-			{{ field.label_tag }}
+			<label class="control-label">{{ field.label_tag }}</label>
 			{% endif %}
 			{% endif %}
 
@@ -55,7 +56,7 @@
 			{% endif %}
 
 			{% if field.field.more %}
-			{{ field.field.more|safe }}
+				<p>{{ field.field.more|safe }}</p>
 			{% endif %}
 		{% endif %}
 
@@ -87,16 +88,7 @@
 			{% endif %}
 			{% endif %}
 
-			{% if field.errors %}
-			<tr>
-				<td>&nbsp;</td>
-				<td colspan="{{ field|length }}">
-					<div class="alert alert-danger">
-						{{ field.errors|safe }}
-					</div>
-				</td>
-			</tr>
-			{% endif %}
+			{% include "access/field_errors.html" with errors=field.errors table=true %}
 			{% if field.field.close_table %}
 			</table>
 			{% endif %}
@@ -104,50 +96,50 @@
 			{% elif field.field.choice_list %}
 			{% for choice in field %}
 			<div class="{{ field.field.type }}">
-				<label>
-					{% if choice.choice_value in field.field.correct %}
-					<span data-aplus-once="yes" class="correct-option glyphicon glyphicon-ok" aria-hidden="true"></span>
-					{% elif choice.choice_value in field.field.neutral %}
-					<span data-aplus-once="yes" class="neutral-option glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-					{% endif %}
+				<label for="{{ choice.id_for_label }}" class="{% if choice.choice_value in choice.value %}option-checked{% endif %}">
 					{{ choice.tag }}
 					{{ choice.choice_label|safe }}
 				</label>
+				{% if choice.choice_value in choice.value and field.field.type == "checkbox" %}
+					{% with choice.choice_value as value %}
+						<div class="question-feedback">
+							{% for hint in field.field.hints|find_hints:value %}
+								<p class="help-block help-block-checkbox">
+									{{ hint|safe }}
+								</p>
+							{% endfor %}
+						</div>
+					{% endwith %}
+				{% endif %}
 			</div>
 			{% endfor %}
-			{% if field.errors %}
-			<div class="alert alert-danger">
-				{{ field.errors|safe }}
-			</div>
-			{% endif %}
+			{% include "access/field_errors.html" with errors=field.errors %}
 
 			{% else %}
+			<div class="{{ field.field.type }}">
+			{{ field.tag }}
+			</div>
 			{{ field }}
+			{% include "access/field_errors.html" with errors=field.errors %}
 
-			{% if field.errors %}
-			<div class="alert alert-danger">
-				{{ field.errors|safe }}
+			{% if field.field.correct %}
+			<div data-aplus-once="yes" class="question-feedback">
+				<p class="help-block">
+					{% trans "Correct answer" %}:
+					{{ field.field.correct|safe }}
+				</p>
 			</div>
 			{% endif %}
 
-			{% if field.field.correct %}
-			<ul data-aplus-once="yes" class="question-feedback-item">
-				<li class="question-feedback-item">
-					{% trans "Correct answer" %}:
-					{{ field.field.correct }}
-				</li>
-			</ul>
 			{% endif %}
 
-			{% endif %}
-
-		{% if not field.field.row_label or field.field.close_table %}
+		{% if field.field.type != "checkbox" and not field.field.row_label or field.field.close_table %}
 			{% if field.field.hints %}
-			<ul class="question-feedback">
-				{% for hint in field.field.hints %}
-				<li class="question-feedback-item">{{ hint|safe }}</li>
-				{% endfor %}
-			</ul>
+				<div class="question-feedback">
+					{% for hint in field.field.hints %}
+					<p class="help-block">{{ hint|safe }}</p>
+					{% endfor %}
+				</div>
 			{% endif %}
 		</div>
 		{% endif %}
