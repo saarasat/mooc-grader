@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<!-- If there are hints, those will override the default messages for correctness -->
+{% if hints %}
+	{% for hint in hints  %}
+	<p class="help-block">
+		{% if answer_correct %}
+			<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
+			<span class="correct">{{ hint|safe }}</span>
+		{% else %}
+			<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+			<span>{{ hint|safe }}</span>
+		{% endif %}
+	</p>
+	{% endfor %}
+<!-- If there are no hints, default-messages are shown -->
+{% else %}
+	<p class="help-block">	
+		{% if answer_correct %}
+			<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
+			<span class="correct">{% trans "Correct!" %}</span>
+		{% else %}
+			<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+			<span>{% trans "Your answer to this question is not correct" %}</span>
+		{% endif %}
+	</p>
+{% endif %}

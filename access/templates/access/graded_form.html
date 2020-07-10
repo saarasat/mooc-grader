@@ -98,11 +98,11 @@
 			{% elif field.field.choice_list %}
 			{% for choice in field %}
 			<div class="{{ field.field.type }}">
-				<label>
+				<label for="{{ choice.id_for_label }}" class="{% if choice.choice_value in choice.value %}option-checked{% endif %}">
 					{% if choice.choice_value in field.field.correct %}
-					<span data-aplus-once="yes" class="correct-option glyphicon glyphicon-ok" aria-hidden="true"></span>
+						<span data-aplus-once="yes" class="correct-option glyphicon glyphicon-ok" aria-hidden="true"></span>
 					{% elif choice.choice_value in field.field.neutral %}
-					<span data-aplus-once="yes" class="neutral-option glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						<span data-aplus-once="yes" class="neutral-option glyphicon glyphicon-question-sign" aria-hidden="true"></span>
 					{% endif %}
 					{{ choice.tag }}
 					{{ choice.choice_label|safe }}
@@ -140,24 +140,20 @@
 
 			{% endif %}
 
-		{% if not field.field.row_label or field.field.close_table %}
-			{% if field.field.hints %}
-				<div class="question-feedback">
-					{% if field.field.type == "checkbox" %}
-						{% for hint in field.field.hints|find_common_hints:field.value %}
-							<p class="help-block">{{ hint|safe }}</p>
-						{% endfor %}
-					{% else %}
-						{% for hint in field.field.hints %}
-							<p class="help-block">{{ hint|safe }}</p>
-						{% endfor %}
-					{% endif %}
-				</div>
-			{% endif %}
+
+		{% if result.accepted and not field.field.row_label or field.field.close_table %}
+			<div class="question-feedback">
+				{% if field.field.type == "checkbox" %}
+					{% include "access/graded_form_feedback.html" with hints=field.field.hints|find_common_hints:field.value answer_correct=field.field.answer_correct %}
+				{% else %}
+					{% include "access/graded_form_feedback.html" with hints=field.field.hints answer_correct=field.field.answer_correct %}
+				{% endif %}
+			</div>
+		{% endif %}
+
 		</div>
 		{% endif %}
 
-		{% endif %}
 
 	{% if field.field.close_set %}
 	</fieldset>
