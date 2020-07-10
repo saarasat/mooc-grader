@@ -141,12 +141,12 @@
 			{% endif %}
 
 			{% if field.field.correct %}
-			<ul data-aplus-once="yes" class="question-feedback-item">
-				<li class="question-feedback-item">
-					{% trans "Correct answer" %}:
-					{{ field.field.correct }}
-				</li>
-			</ul>
+				<div data-aplus-once="yes" class="question-feedback">
+					<p class="help-block">
+						{% trans "Correct answer" %}:
+						{{ field.field.correct }}
+					</p>
+				</div>
 			{% endif %}
 
 			{% endif %}
