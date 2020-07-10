@@ -586,6 +586,7 @@ class GradedForm(forms.Form):
         # Apply new feedback definitions.
         methods = method.split("-")
         mods = methods[1:]
+
         for fb in configuration.get("feedback", []):
             new_hint = fb.get('label', None)
             comparison = fb.get('value', '')
@@ -607,7 +608,12 @@ class GradedForm(forms.Form):
                     methods_used = method
                 r = self.compare_values(methods_used, value, comparison)
                 add = not r if fb.get('not', False) else r
-            if add:
+
+            # Checkbox-hints should be linkable with their options:
+            if t == "checkbox" and add:
+                hints.append(fb)
+
+            if t != "checkbox" and add:
                 for j in range(len(hints)):
                     if new_hint.startswith(hints[j]):
                         hints[j] = new_hint
@@ -616,7 +622,8 @@ class GradedForm(forms.Form):
                     elif hints[j].startswith(new_hint):
                         add = False
                         break
-            if add:
+
+            if t != "checkbox" and add:
                 hints.append(new_hint)
 
         if name in self.fields:
@@ -684,10 +691,6 @@ class GradedForm(forms.Form):
                 correct = 1
             else:
                 correct = (non_neutral_count / 2.0 - wrong_answers) / (non_neutral_count / 2.0)
-
-        # Add note of multiple correct answers.
-        if correct_count > 1 and len(value) == 1:
-            hints.append(_("Multiple choices are selectable."))
 
         return correct, hints, 'array'
 
