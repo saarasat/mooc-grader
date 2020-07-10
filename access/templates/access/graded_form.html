@@ -20,9 +20,9 @@
 
 			{% if field.label %}
 				{% if field.field.choice_list %}
-					<label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+					<label class="control-label">{{ field.label }}</label>
 				{% else %}
-					<label for="{{ field.id_for_label }}" class="control-label">{{ field.label_tag }}</label>
+					<label class="control-label">{{ field.label_tag }}</label>
 				{% endif %}
 			{% endif %}
 
