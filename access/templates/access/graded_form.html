@@ -2,18 +2,21 @@
 {% load access %}
 <form method="post" action="{{ post_url }}"{% if result.form.multipart %} enctype="multipart/form-data"{% endif %} class="aplus-quiz1">
 	{% for field in result.form %}
+	
 	{% if field.field.open_set %}
-	<fieldset id="{{ field.field.open_set }}"{% if result.accepted and field.field.group_errors %} class="alert {% if field.field.open_set in result.error_groups %}alert-danger{% else %}alert-success{% endif %}"{% endif %}>
+	<!-- Beginning of all questions -->
+		<fieldset id="{{ field.field.open_set }}"{% if result.accepted and field.field.group_errors %} class="alert {% if field.field.open_set in result.error_groups %}alert-danger{% else %}alert-success{% endif %}"{% endif %}>
 		{% if field.field.set_title %}<legend>{{ field.field.set_title }}</legend>{% endif %}
 	{% endif %}
 
 		{% if field.field.type == "static" %}
-		<p>{{ field.field.more|safe }}</p>
+		<div>{{ field.field.more|safe }}</div>
 		{% elif field.field.type == "hidden" %}
 			{{ field }}
 		{% else %}
 
 		{% if not field.field.row_label or field.field.open_table %}
+		<!-- Beginning of a individual question (individual form-group) -->
 		<div class="{{ field.field.html_class }} {% if field.errors %} has-error{% endif %}">
 
 			{% if field.field.required %}<span class="required">*</span>{% endif %}
@@ -28,6 +31,7 @@
 
 			{% if not field.field.group_errors %}
 			{% if result.accepted %}
+			<!-- Points badge -->
 				{% if not exercise.feedback or field.field.points > 0 %}
 				<span class="badge badge-{% if field.field.grade_points > 0 and field.field.grade_points < field.field.max_points %}warning{% elif field.field.name in result.error_fields %}danger{% else %}success{% endif %}">
 					{{ field.field.grade_points }} / {{ field.field.max_points }}
@@ -52,16 +56,24 @@
 				{% endblocktrans %}
 				</span>
 				{% endif %}
+
+			<!---->
 			{% endif %}
 			{% endif %}
 
 			{% if field.field.more %}
-				<p>{{ field.field.more|safe }}</p>
+			<!-- Description of a question -->
+				<div>{{ field.field.more|safe }}</div>
+			<!---->
 			{% endif %}
+
+
+		<!-- -->
 		{% endif %}
 
 			{% if field.field.row_label %}
 			{% if field.field.open_table %}
+			<!-- Table-checkbox or table-radio-field -->
 			<table class="table">
 			<tr>
 				<td>&nbsp;</td>
@@ -93,9 +105,11 @@
 			{% endif %}
 			{% if field.field.close_table %}
 			</table>
+			<!---->
 			{% endif %}
 
 			{% elif field.field.choice_list %}
+			<!-- Checkbox- or radio-field -->
 			{% for choice in field %}
 			<div class="{{ field.field.type }}">
 				<label for="{{ choice.id_for_label }}" class="{% if choice.choice_value in choice.value %}option-checked{% endif %}">
@@ -123,6 +137,10 @@
 			{% endif %}
 
 			{% else %}
+			<!-- Text-field -->
+			<div class="{{ field.field.type }}">
+				{{ field.tag }}
+			</div>
 			{{ field }}
 
 			{% if field.errors %}
@@ -130,18 +148,21 @@
 			{% endif %}
 
 			{% if field.field.correct %}
+			<!-- Correct answer of a text-field to be shown after max. submissions -->
 				<div data-aplus-once="yes" class="question-feedback">
 					<p class="help-block">
 						{% trans "Correct answer" %}:
 						{{ field.field.correct }}
 					</p>
 				</div>
+			<!-- -->
 			{% endif %}
 
+			<!-- -->
 			{% endif %}
-
 
 		{% if result.accepted and not field.field.row_label or field.field.close_table %}
+		<!-- Question feedback: correctness and hints -->
 			<div class="question-feedback">
 				{% if field.field.type == "checkbox" %}
 					{% include "access/graded_form_feedback.html" with hints=field.field.hints|find_common_hints:field.value answer_correct=field.field.answer_correct %}
@@ -149,8 +170,10 @@
 					{% include "access/graded_form_feedback.html" with hints=field.field.hints answer_correct=field.field.answer_correct %}
 				{% endif %}
 			</div>
-		</div>
+		<!-- -->
 		{% endif %}
+		</div>
+
 		{% endif %}
 
 
