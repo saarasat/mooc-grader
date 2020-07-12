@@ -10,7 +10,9 @@
 	{% endif %}
 
 		{% if field.field.type == "static" %}
-		{{ field.field.more|safe }}
+		<div class="question-description">
+			{{ field.field.more|safe }}
+		</div>
 		{% elif field.field.type == "hidden" %}
 			{{ field }}
 		{% else %}
@@ -63,7 +65,9 @@
 
 			{% if field.field.more %}
 			<!-- Description of a question -->
-			{{ field.field.more|safe }}
+			<div class="question-description">
+				{{ field.field.more|safe }}
+			</div>
 			<!---->
 			{% endif %}
 
@@ -138,6 +142,9 @@
 
 			{% else %}
 			<!-- Text-field -->
+			<div class="{{ field.field.type }}">
+				{{ field.tag }}
+			</div>
 			{{ field }}
 
 			{% if field.errors %}
