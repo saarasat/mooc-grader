@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<!-- If there are hints, those will override the default messages for correctness -->
+{# If there are hints, those will override the default messages for correctness #}
 {% if hints %}
 	{% for hint in hints  %}
 	<p class="help-block">
@@ -13,7 +13,8 @@
 		{% endif %}
 	</p>
 	{% endfor %}
-<!-- If there are no hints, default-messages are shown -->
+
+{# If there are no hints, default-messages are shown #}
 {% else %}
 	<p class="help-block">	
 		{% if answer_correct %}

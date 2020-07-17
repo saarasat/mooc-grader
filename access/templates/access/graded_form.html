@@ -18,7 +18,7 @@
 		{% else %}
 
 		{% if not field.field.row_label or field.field.open_table %}
-		<!-- Beginning of a individual question (individual form-group) -->
+		<!-- Individual question heading (individual form-group) -->
 		<div class="{{ field.field.html_class }} {% if field.errors %} has-error{% endif %}">
 
 			{% if field.field.required %}<span class="required">*</span>{% endif %}
@@ -59,7 +59,7 @@
 				</span>
 				{% endif %}
 
-			<!---->
+			<!-- End of points badge -->
 			{% endif %}
 			{% endif %}
 
@@ -68,16 +68,16 @@
 			<div class="question-description">
 				{{ field.field.more|safe }}
 			</div>
-			<!---->
+			<!-- End of description -->
 			{% endif %}
 
 
-		<!-- -->
+		<!-- End of an individual question heading -->
 		{% endif %}
 
 			{% if field.field.row_label %}
 			{% if field.field.open_table %}
-			<!-- Table-checkbox or table-radio-field -->
+			<!-- An input field: Table-checkbox or table-radio-field -->
 			<table class="table">
 			<tr>
 				<td>&nbsp;</td>
@@ -109,11 +109,11 @@
 			{% endif %}
 			{% if field.field.close_table %}
 			</table>
-			<!---->
+			<!-- End of a table-field -->
 			{% endif %}
 
 			{% elif field.field.choice_list %}
-			<!-- Checkbox- or radio-field -->
+			<!-- An input-field: Checkbox- or radio-field -->
 			{% for choice in field %}
 			<div class="{{ field.field.type }}">
 				<label for="{{ choice.id_for_label }}" class="{% if choice.choice_value in choice.value %}option-checked{% endif %}">
@@ -139,9 +139,9 @@
 			{% if field.errors %}
 				{% include "access/field_errors.html" with errors=field.errors %}
 			{% endif %}
-
+			<!-- End of a checkbox- or radio-field -->
 			{% else %}
-			<!-- Text-field -->
+			<!-- An input-field: Text-field -->
 			<div class="{{ field.field.type }}">
 				{{ field.tag }}
 			</div>
@@ -159,14 +159,14 @@
 						{{ field.field.correct }}
 					</p>
 				</div>
-			<!-- -->
+			<!-- End of a correct answer -->
 			{% endif %}
 
-			<!-- -->
+			<!-- End of a text-field -->
 			{% endif %}
 
 		{% if result.accepted and not field.field.row_label or field.field.close_table %}
-		<!-- Question feedback: correctness and hints -->
+		<!-- Question feedback -->
 			<div class="question-feedback">
 				{% if field.field.type == "checkbox" %}
 					{% include "access/graded_form_feedback.html" with hints=field.field.hints|find_common_hints:field.value answer_correct=field.field.answer_correct %}
@@ -174,15 +174,15 @@
 					{% include "access/graded_form_feedback.html" with hints=field.field.hints answer_correct=field.field.answer_correct %}
 				{% endif %}
 			</div>
-		<!---->
+		<!-- End of question feedback -->
 		{% endif %}
 
 		</div>
 		{% endif %}
 
-
 	{% if field.field.close_set %}
-	</fieldset>
+	<!-- End of all questions -->
+		</fieldset>
 	{% endif %}
 	{% if field.field.randomized and not result.accepted %}
 	<input type="hidden" name="{{ field.field.name }}_sample" value="{{ field.field.random_sample }}" />
