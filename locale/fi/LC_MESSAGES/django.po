@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MOOC-grader\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-13 06:04+0000\n"
+"POT-Creation-Date: 2020-07-17 13:22+0000\n"
 "PO-Revision-Date: 2019-10-12 20:00+0300\n"
 "Last-Translator: Saara Satokangas <saara.satokangas@aalto.fi>\n"
 "Language-Team: Finnish <>\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: access/templates/access/accept_general_form.html:42
 #: access/templates/access/accept_git_form.html:16
 #: access/templates/access/accept_post_form.html:17
-#: access/templates/access/graded_form.html:200
+#: access/templates/access/graded_form.html:197
 msgid "Submit"
 msgstr "Lähetä"
 
@@ -331,15 +331,15 @@ msgstr[1] ""
 "\n"
 "%(points)s pistettä"
 
-#: access/templates/access/graded_form.html:158
+#: access/templates/access/graded_form.html:155
 msgid "Correct answer"
 msgstr "Oikea vastaus"
 
-#: access/templates/access/graded_form_feedback.html:21
+#: access/templates/access/graded_form_feedback.html:22
 msgid "Correct!"
 msgstr "Oikein!"
 
-#: access/templates/access/graded_form_feedback.html:24
+#: access/templates/access/graded_form_feedback.html:25
 msgid "Your answer to this question is not correct"
 msgstr "Vastaus on väärin"
 
@@ -407,10 +407,14 @@ msgstr ""
 "Pahoittelemme häiriötä.\n"
 "Yritä myöhemmin uudelleen tai ota yhteyttä kurssihenkilökuntaan."
 
-#: access/types/forms.py:817
+#: access/types/forms.py:635
+msgid "Multiple choices are selectable"
+msgstr "Voit valita useita vaihtoehtoja"
+
+#: access/types/forms.py:821
 msgid "Multiple correct answers accepted."
 msgstr "Useita oikeita vastauksia."
 
-#: access/types/forms.py:821
+#: access/types/forms.py:825
 msgid "Correct parts in your answer: "
 msgstr "Oikeat osat vastauksessasi: "

@@ -31,5 +31,7 @@ def find_common_hints(list_of_hints, checked):
         for hint in list_of_hints:
             if hint.get('not') and hint.get('value') not in checked and hint.get('label') not in hints:
                 hints.append(hint.get('label'))
+            elif hint.get('multiple') and len(checked) == 1:
+                hints.append(hint.get('label'))
 
     return hints

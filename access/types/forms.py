@@ -340,6 +340,7 @@ class GradedForm(forms.Form):
                 if opt.get('selected', False) or opt.get('initial', False):
                     initial.append(value)
                 i += 1
+
         return choices, initial, correct
 
     def group_name(self, i):
@@ -531,7 +532,7 @@ class GradedForm(forms.Form):
                     ok, hints, method = self.grade_radio(
                         self.row_options(configuration, row), value, hints)
                 else:
-                    ok, hints, method = self.grade_checkbox(
+                    ok, correct_count, hints, method = self.grade_checkbox(
                         self.row_options(configuration, row), value, hints, name=name)
                 if self.exercise.get("feedback") or self.is_enrollment_exercise():
                     points += row.get("points", 0)
@@ -555,8 +556,9 @@ class GradedForm(forms.Form):
 
         name = self.field_name(i, configuration)
         value = self.cleaned_data.get(name, None)
+
         if t == "checkbox":
-            ok, hints, method = self.grade_checkbox(configuration, value, name=name)
+            ok, correct_count, hints, method = self.grade_checkbox(configuration, value, name=name)
         elif t == "radio" or t == "dropdown" or t == "select":
             ok, hints, method = self.grade_radio(configuration, value)
         elif t == "text" or t == "textarea":
@@ -629,6 +631,8 @@ class GradedForm(forms.Form):
             if t != "checkbox" and add:
                 hints.append(new_hint)
 
+        if t == "checkbox" and correct_count > 1:
+            hints.append({'label': _('Multiple choices are selectable'), 'multiple': True})
 
         if name in self.fields:
             self.fields[name].grade_points = earned_points
@@ -698,7 +702,7 @@ class GradedForm(forms.Form):
             else:
                 correct = (non_neutral_count / 2.0 - wrong_answers) / (non_neutral_count / 2.0)
 
-        return correct, hints, 'array'
+        return correct, correct_count, hints, 'array'
 
     def grade_radio(self, configuration, value, hints=None):
         hints = hints or []
