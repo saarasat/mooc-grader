@@ -141,10 +141,7 @@
 			{% endif %}
 			<!-- End of a checkbox- or radio-field -->
 			{% else %}
-			<!-- An input-field: Text-field -->
-			<div class="{{ field.field.type }}">
-				{{ field.tag }}
-			</div>
+			<!-- An input-field: (mainly) Text-field -->
 			{{ field }}
 
 			{% if field.errors %}
