@@ -14,24 +14,23 @@ def ajax_url(context):
     ))
     return ""
 
+
 @register.filter
 def find_checkbox_hints(list_of_hints, value):
-    hints = []
-    if list_of_hints:
-        for hint in list_of_hints:
-            if hint.get('value') == value:
-                hints.append(hint.get('label'))
+    return list_of_hints.get(value)
 
-    return hints
 
 @register.filter
 def find_common_hints(list_of_hints, checked):
     hints = []
     if list_of_hints:
-        for hint in list_of_hints:
-            if hint.get('not') and hint.get('value') not in checked and hint.get('label') not in hints:
-                hints.append(hint.get('label'))
-            elif hint.get('multiple') and len(checked) == 1:
-                hints.append(hint.get('label'))
+        if len(checked) == 1 and list_of_hints.get('multiple'):
+            hints.append(list_of_hints.get('multiple'))
+
+        common_hints = list_of_hints.get('not')
+        if common_hints:
+            for hint_value in common_hints:
+                if not hint_value in checked and common_hints.get(hint_value) not in hints:
+                    hints.append(common_hints.get(hint_value))
 
     return hints

@@ -3,6 +3,7 @@ import random
 import re
 import json
 import difflib
+from collections import OrderedDict
 
 from django import forms
 from django.conf import settings
@@ -559,6 +560,8 @@ class GradedForm(forms.Form):
 
         if t == "checkbox":
             ok, correct_count, hints, method = self.grade_checkbox(configuration, value, name=name)
+            if hints == []:
+                hints = OrderedDict()
         elif t == "radio" or t == "dropdown" or t == "select":
             ok, hints, method = self.grade_radio(configuration, value)
         elif t == "text" or t == "textarea":
@@ -616,7 +619,11 @@ class GradedForm(forms.Form):
 
             # Checkbox-hints should be linkable with their options:
             if t == "checkbox" and add:
-                hints.append(fb)
+                if fb.get('not'):
+                    hints['not'] = hints.get('not', OrderedDict())
+                    hints['not'][fb.get('value')] = new_hint
+                else:
+                    hints[fb.get('value')] = new_hint
 
             if t != "checkbox" and add:
                 for j in range(len(hints)):
@@ -632,7 +639,7 @@ class GradedForm(forms.Form):
                 hints.append(new_hint)
 
         if t == "checkbox" and correct_count > 1:
-            hints.append({'label': _('Multiple choices are selectable'), 'multiple': True})
+            hints['multiple'] = _('Multiple choices are selectable')
 
         if name in self.fields:
             self.fields[name].grade_points = earned_points

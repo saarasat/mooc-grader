@@ -127,11 +127,13 @@
 				</label>
 				{% if field.field.type == "checkbox" and choice.choice_value in choice.value %}
 					<div class="question-feedback">
-						{% for hint in field.field.hints|find_checkbox_hints:choice.choice_value %}
-							<p class="help-block help-block-checkbox">
-								{{ hint|safe }}
-							</p>
-						{% endfor %}
+						{% with hint=field.field.hints|find_checkbox_hints:choice.choice_value %}
+							{% if hint %}
+								<p class="help-block help-block-checkbox">
+									{{ hint|safe }}
+								</p>
+							{% endif %}
+						{% endwith %}
 					</div>
 				{% endif %}
 			</div>
