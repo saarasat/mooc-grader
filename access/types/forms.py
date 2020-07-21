@@ -564,7 +564,7 @@ class GradedForm(forms.Form):
 
         if t == "checkbox":
             ok, correct_count, hints, method = self.grade_checkbox(configuration, value, name=name)
-            if hints == []:
+            if not hints:
                 hints = OrderedDict()
         elif t == "radio" or t == "dropdown" or t == "select":
             ok, hints, method = self.grade_radio(configuration, value)
@@ -624,10 +624,10 @@ class GradedForm(forms.Form):
             # Checkbox-hints should be linkable with their options:
             if t == "checkbox" and add:
                 if fb.get('not'):
-                    hints['not'] = hints.get('not', OrderedDict())
-                    hints['not'][fb.get('value')] = new_hint
+                    hints['not'] = hints.get('not') or OrderedDict()
+                    hints['not'][fb.get('value', '')] = new_hint
                 else:
-                    hints[fb.get('value')] = new_hint
+                    hints[fb.get('value', '')] = new_hint
 
             if t != "checkbox" and add:
                 for j in range(len(hints)):
