@@ -295,16 +295,12 @@ class GradedForm(forms.Form):
                 field.correct = config['correct']
             if 'options' in config:
                 neutral = []
-                wrong = []
                 a = 0
                 for opt in config['options']:
                     if opt.get('correct') == 'neutral':
                         neutral.append(self.option_name(a, opt))
-                    if not opt.get('correct'):
-                        wrong.append(self.option_name(a, opt))
                     a += 1
                 field.neutral = neutral
-                field.wrong = wrong
 
         if 'extra_info' in config and 'class' in config['extra_info']:
             field.html_class = config['extra_info']['class']
@@ -593,7 +589,7 @@ class GradedForm(forms.Form):
             earned_points = 0
 
         # Check if the field is fully correct
-        answer_correct = bool(earned_points==points)
+        answer_correct = (earned_points==points)
 
         # Apply new feedback definitions.
         methods = method.split("-")

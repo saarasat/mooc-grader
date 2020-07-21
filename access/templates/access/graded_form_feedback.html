@@ -1,44 +1,36 @@
 {% load i18n %}
 
 
-{# if "reveal-model after max-submissions" is set to true and user's answer is not correct, the real correct answer is shown #}
-{% if field.correct and not field.answer_correct %}
-	<div data-aplus-once="yes" class="question-feedback">
-		<p class="help-block darker">
-			{% if field.type == "checkbox" or field.type == "radio" %}
-				{% trans "Above you can see which would have been the correct options." %}
-				{% if field.neutral %}
-					{% trans "Neutral options which do not affect grading are marked with a question mark." %}
-				{% endif %}
-			{% else %}
-				{% trans "Correct answer is" %}:
-				{{ field.correct }}
-			{% endif %}
-		</p>
-	</div>
-{# if model answer is not be shown to the user, possible hints or default messages are shown instead #}
-{% else %}
-	{% if hints %}
-		{% for hint in hints  %}
+{# if model answer is not be shown to the user, possible hints and default messages of correctness are shown instead #}
+{% if hints and not field.correct %}
+	{% for hint in hints  %}
 		<p class="help-block">
-			{% if field.answer_correct %}
-				<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
-				<span class="darker">{{ hint|safe }}</span>
-			{% else %}
-				<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-				<span class="darker">{{ hint|safe }}</span>
-			{% endif %}
+			{{ hint|safe }}
 		</p>
-		{% endfor %}
-	{% else %}
-		<p class="help-block">
-			{% if field.answer_correct %}
-				<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
-				<span class="darker">{% trans "Correct!" %}</span>
-			{% else %}
-				<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-				<span class="darker">{% trans "Your answer to this question is not correct" %}</span>
-			{% endif %}
-		</p>
-	{% endif %}
+	{% endfor %}
 {% endif %}
+<p class="help-block">
+	{% if field.answer_correct %}
+		<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
+		<span class="darker">{% trans "Correct!" %}</span>
+	{% else %}
+		<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+		<span class="darker">
+			{% if not field.correct %}
+				{% trans "Incorrect" %}
+			{% else %}
+			{# if "reveal-model after max-submissions" is set to true and user's answer is not correct, the model answer is shown #}
+				<span data-aplus-once="yes">
+					{% if field.type == "checkbox" or field.type == "radio" %}
+						{% trans "Incorrect. You can check the correct options above." %}
+						{% if field.neutral %}
+							{% trans "Neutral options which do not affect grading are marked with a question mark." %}
+						{% endif %}
+					{% else %}
+						{% trans "Incorrect. The correct answer is" %}: {{ field.correct }}
+					{% endif %}
+				</span>
+			{% endif %}
+		</span>
+	{% endif %}
+</p>

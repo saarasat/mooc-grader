@@ -126,8 +126,6 @@
 						<i data-aplus-once="yes" class="glyphicon glyphicon-ok" aria-hidden="true"></i>
 					{% elif choice.choice_value in field.field.neutral %}
 						<i data-aplus-once="yes" class="glyphicon glyphicon-question-sign" aria-hidden="true"></i>
-					{% elif choice.choice_value in field.field.wrong and choice.choice_value in field.value %}
-						<i data-aplus-once="yes" class="glyphicon glyphicon-remove" aria-hidden="true"></i>
 					{% endif %}
 					{# end of correct answer #}
 				{% endif %}
