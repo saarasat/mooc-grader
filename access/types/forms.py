@@ -295,12 +295,16 @@ class GradedForm(forms.Form):
                 field.correct = config['correct']
             if 'options' in config:
                 neutral = []
+                wrong = []
                 a = 0
                 for opt in config['options']:
                     if opt.get('correct') == 'neutral':
                         neutral.append(self.option_name(a, opt))
+                    if not opt.get('correct'):
+                        wrong.append(self.option_name(a, opt))
                     a += 1
                 field.neutral = neutral
+                field.wrong = wrong
 
         if 'extra_info' in config and 'class' in config['extra_info']:
             field.html_class = config['extra_info']['class']

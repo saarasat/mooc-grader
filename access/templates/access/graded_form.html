@@ -117,14 +117,21 @@
 			{% for choice in field %}
 			<div class="{{ field.field.type }}">
 				<label for="{{ choice.id_for_label }}" class="{% if choice.choice_value in choice.value %}option-checked{% endif %}">
-					{% if choice.choice_value in field.field.correct %}
-						<span data-aplus-once="yes" class="correct-option glyphicon glyphicon-ok" aria-hidden="true"></span>
-					{% elif choice.choice_value in field.field.neutral %}
-						<span data-aplus-once="yes" class="neutral-option glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-					{% endif %}
 					{{ choice.tag }}
 					{{ choice.choice_label|safe }}
 				</label>
+				{% if not field.field.answer_correct %}
+					{# Marking the correct radio- or checkbox-options for after max-submissions, if "reveal-model" set to true and answer is not correct #}
+					{% if choice.choice_value in field.field.correct %}
+						<i data-aplus-once="yes" class="glyphicon glyphicon-ok" aria-hidden="true"></i>
+					{% elif choice.choice_value in field.field.neutral %}
+						<i data-aplus-once="yes" class="glyphicon glyphicon-question-sign" aria-hidden="true"></i>
+					{% elif choice.choice_value in field.field.wrong and choice.choice_value in field.value %}
+						<i data-aplus-once="yes" class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+					{% endif %}
+					{# end of correct answer #}
+				{% endif %}
+
 				{% if field.field.type == "checkbox" and choice.choice_value in choice.value %}
 					<div class="question-feedback">
 						{% with hint=field.field.hints|find_checkbox_hints:choice.choice_value %}
@@ -145,36 +152,24 @@
 			{% else %}
 			<!-- An input-field: (mainly) Text-field -->
 			{{ field }}
-
 			{% if field.errors %}
 				{% include "access/field_errors.html" with errors=field.errors %}
 			{% endif %}
-
-			{% if field.field.correct %}
-			<!-- Correct answer of a text-field to be shown after max. submissions -->
-				<div data-aplus-once="yes" class="question-feedback">
-					<p class="help-block">
-						{% trans "Correct answer" %}:
-						{{ field.field.correct }}
-					</p>
-				</div>
-			<!-- End of a correct answer -->
-			{% endif %}
-
 			<!-- End of a text-field -->
 			{% endif %}
 
 		{% if result.accepted and not field.field.row_label or field.field.close_table %}
-		<!-- Question feedback -->
+			<!-- Question feedback -->
 			<div class="question-feedback">
 				{% if field.field.type == "checkbox" %}
-					{% include "access/graded_form_feedback.html" with hints=field.field.hints|find_common_hints:field.value answer_correct=field.field.answer_correct %}
+					{% include "access/graded_form_feedback.html" with field=field.field hints=field.field.hints|find_common_hints:field.value %}
 				{% else %}
-					{% include "access/graded_form_feedback.html" with hints=field.field.hints answer_correct=field.field.answer_correct %}
+					{% include "access/graded_form_feedback.html" with field=field.field hints=field.field.hints %}
 				{% endif %}
 			</div>
-		<!-- End of question feedback -->
+			<!-- End of question feedback -->
 		{% endif %}
+
 
 		</div>
 		{% endif %}
