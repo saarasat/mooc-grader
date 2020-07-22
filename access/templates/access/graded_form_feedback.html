@@ -4,18 +4,18 @@
 {# if model answer is not be shown to the user, possible hints and default messages of correctness are shown instead #}
 {% if hints and not field.correct %}
 	{% for hint in hints  %}
-		<p class="help-block">
+		<p class="hint hint-general">
 			{{ hint|safe }}
 		</p>
 	{% endfor %}
 {% endif %}
-<p class="help-block">
+<p class="question-feedback">
 	{% if field.answer_correct %}
-		<i class="glyphicon glyphicon-ok"  aria-hidden="true"></i>
-		<span class="darker">{% trans "Correct!" %}</span>
+		<i class="icon-correct glyphicon glyphicon-ok" aria-hidden="true"></i>
+		<span class="feedback-text">{% trans "Correct!" %}</span>
 	{% else %}
-		<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-		<span class="darker">
+		<i class="icon-incorrect glyphicon glyphicon-remove" aria-hidden="true"></i>
+		<span class="feedback-text">
 			{% if not field.correct %}
 				{% trans "Incorrect" %}
 			{% else %}

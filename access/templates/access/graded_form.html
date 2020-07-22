@@ -18,9 +18,8 @@
 		{% else %}
 
 		{% if not field.field.row_label or field.field.open_table %}
-		<!-- Individual question heading (individual form-group) -->
-		<div class="{{ field.field.html_class }} {% if field.errors %} has-error{% endif %}">
-
+		<!-- Individual question (individual form-group) -->
+		<div class="question-area {{ field.field.html_class }} {% if field.errors %} has-error{% endif %}">
 			{% if field.field.required %}<span class="required">*</span>{% endif %}
 
 			{% if field.label %}
@@ -123,18 +122,18 @@
 				{% if not field.field.answer_correct %}
 					{# Marking the correct radio- or checkbox-options for after max-submissions, if "reveal-model" set to true and answer is not correct #}
 					{% if choice.choice_value in field.field.correct %}
-						<i data-aplus-once="yes" class="glyphicon glyphicon-ok" aria-hidden="true"></i>
+						<i data-aplus-once="yes" class="icon-correct glyphicon glyphicon-ok" aria-hidden="true"></i>
 					{% elif choice.choice_value in field.field.neutral %}
-						<i data-aplus-once="yes" class="glyphicon glyphicon-question-sign" aria-hidden="true"></i>
+						<i data-aplus-once="yes" class="icon-neutral glyphicon glyphicon-question-sign" aria-hidden="true"></i>
 					{% endif %}
 					{# end of correct answer #}
 				{% endif %}
 
 				{% if field.field.type == "checkbox" and choice.choice_value in choice.value %}
-					<div class="question-feedback">
+					<div>
 						{% with hint=field.field.hints|find_checkbox_hints:choice.choice_value %}
 							{% if hint %}
-								<p class="help-block help-block-checkbox">
+								<p class="hint hint-checkbox">
 									{{ hint|safe }}
 								</p>
 							{% endif %}
@@ -158,7 +157,7 @@
 
 		{% if result.accepted and not field.field.row_label or field.field.close_table %}
 			<!-- Question feedback -->
-			<div class="question-feedback">
+			<div>
 				{% if field.field.type == "checkbox" %}
 					{% include "access/graded_form_feedback.html" with field=field.field hints=field.field.hints|find_common_hints:field.value %}
 				{% else %}
