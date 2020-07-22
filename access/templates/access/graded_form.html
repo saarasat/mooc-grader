@@ -122,9 +122,9 @@
 				{% if not field.field.answer_correct %}
 					{# Marking the correct radio- or checkbox-options for after max-submissions, if "reveal-model" set to true and answer is not correct #}
 					{% if choice.choice_value in field.field.correct %}
-						<i data-aplus-once="yes" class="icon-correct glyphicon glyphicon-ok" aria-hidden="true"></i>
+						<i data-aplus-once="yes" class="quiz1-icon quiz1-icon-correct" aria-hidden="true"></i>
 					{% elif choice.choice_value in field.field.neutral %}
-						<i data-aplus-once="yes" class="icon-neutral glyphicon glyphicon-question-sign" aria-hidden="true"></i>
+						<i data-aplus-once="yes" class="quiz1-icon quiz1-icon-neutral" aria-hidden="true"></i>
 					{% endif %}
 					{# end of correct answer #}
 				{% endif %}
@@ -133,7 +133,7 @@
 					<div>
 						{% with hint=field.field.hints|find_checkbox_hints:choice.choice_value %}
 							{% if hint %}
-								<p class="hint hint-checkbox">
+								<p class="question-hint hint-checkbox">
 									{{ hint|safe }}
 								</p>
 							{% endif %}
