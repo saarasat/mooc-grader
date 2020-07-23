@@ -561,6 +561,8 @@ class GradedForm(forms.Form):
         if t == "checkbox":
             ok, correct_count, hints, method = self.grade_checkbox(configuration, value, name=name)
             if not hints:
+                # checkbox-hints are in an OrderedDict to enable linking
+                # the hints efficiently to the related options
                 hints = OrderedDict()
         elif t == "radio" or t == "dropdown" or t == "select":
             ok, hints, method = self.grade_radio(configuration, value)
